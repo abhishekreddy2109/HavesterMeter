@@ -1,0 +1,7 @@
+{
+  "name": "harvester-meter",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
