@@ -1,0 +1,35 @@
+<ion-header>
+  <ion-toolbar color="medium">
+    <ion-title>📚 Bill History</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-list *ngIf="bills.length; else empty">
+    <ion-item *ngFor="let bill of bills">
+      <ion-label>
+        <h2>{{ bill.farmerName }}</h2>
+        <p>{{ bill.fieldName || '—' }}</p>
+        <p>
+          ₹{{ bill.totalAmount | number: '1.0-0' }} •
+          {{ bill.totalHours | number: '1.2-2' }} hr •
+          {{ bill.date | date: 'short' }}
+        </p>
+      </ion-label>
+
+      <ion-button fill="clear" color="primary" (click)="shareBill(bill)">
+        <ion-icon name="share"></ion-icon>
+      </ion-button>
+    </ion-item>
+  </ion-list>
+
+  <ng-template #empty>
+    <p style="text-align:center;margin-top:2rem;">No bills saved yet</p>
+  </ng-template>
+
+  <ion-button expand="block" color="danger" (click)="clearAll()" *ngIf="bills.length">
+    🗑 Clear All Bills
+  </ion-button>
+
+  <ion-button expand="block" color="medium" (click)="goHome()">⬅️ Back</ion-button>
+</ion-content>

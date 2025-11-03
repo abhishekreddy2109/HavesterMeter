@@ -1,0 +1,138 @@
+<ion-header>
+  <ion-toolbar color="tertiary">
+    <ion-title>🧾 Harvester Bill</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <!-- Bill Card to be captured -->
+  <div #billCard id="bill-card" class="bill-card">
+    <div class="bill-header">
+      <img src="assets/images/harvester_logo.avif" alt="Harvester Logo" />
+      <h2>🌾 Harvester Meter Receipt</h2>
+      <p class="small">Generated automatically by Harvester App</p>
+    </div>
+
+    <div class="bill-body">
+      <p><b>🧑‍🌾 Farmer:</b> {{ farmerName || '—' }}</p>
+      <p><b>📞 Mobile:</b> {{ mobile || '—' }}</p>
+      <p><b>📍 Address:</b> {{ address || '—' }}</p>
+      <p><b>🏞️ Field:</b> {{ fieldName || '—' }}</p>
+
+      <div class="timeline-section">
+        <h3>🕐 Work Timeline</h3>
+        <table class="timeline-table">
+          <tr>
+            <td><b>Start Time</b></td>
+            <td>{{ startTime || '—' }}</td>
+          </tr>
+          <ng-container *ngIf="stopPeriods.length > 0">
+            <tr>
+              <td colspan="2" class="table-divider">Stop Periods</td>
+            </tr>
+            <tr *ngFor="let stop of stopPeriods; index as i">
+              <td>Stop {{ i + 1 }}</td>
+              <td>{{ stop.start }} → {{ stop.end }}</td>
+            </tr>
+          </ng-container>
+          <tr>
+            <td><b>End Time</b></td>
+            <td>{{ endTime || '—' }}</td>
+          </tr>
+          <tr class="highlight">
+            <td><b>Total Active Time</b></td>
+            <td>{{ totalHours | number:'1.2-2' }} hrs</td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="amount-section">
+        <table class="amount-table">
+          <tr>
+            <td>💰 Rate / Hour</td>
+            <td><b>₹{{ ratePerHour }}</b></td>
+          </tr>
+          <tr>
+            <td>📄 Total Amount</td>
+            <td><b class="amount">₹{{ totalAmount | number:'1.0-2' }}</b></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="bill-footer">
+      <hr />
+      <p class="small">Thank you for using <b>Harvester Meter</b> 🌾</p>
+      <p class="small">Date: {{ today | date:'mediumDate' }}</p>
+    </div>
+  </div>
+
+
+<!-- Farmer name with mic -->
+<ion-item>
+  <ion-label position="stacked">🧑‍🌾 Farmer Name</ion-label>
+  <div class="input-with-mic">
+    <ion-input [(ngModel)]="farmerName" placeholder="Enter farmer name"></ion-input>
+    <ion-button
+      fill="clear"
+      color="success"
+      (click)="recordFarmerName()"
+      [disabled]="isFarmerListening || isAddressListening">
+      🎙
+    </ion-button>
+  </div>
+</ion-item>
+
+<!-- Address with mic -->
+<ion-item>
+  <ion-label position="stacked">📍 Address / Village</ion-label>
+  <div class="input-with-mic">
+    <ion-input [(ngModel)]="address" placeholder="Enter address / village"></ion-input>
+    <ion-button
+      fill="clear"
+      color="success"
+      (click)="recordAddress()"
+      [disabled]="isFarmerListening || isAddressListening">
+      🎙
+    </ion-button>
+  </div>
+</ion-item>
+
+
+
+  <ion-list>
+    <ion-item>
+      <ion-label position="stacked">📞 Mobile Number</ion-label>
+      <ion-input [(ngModel)]="mobile" placeholder="Enter farmer mobile"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">🌾 Field Name</ion-label>
+      <ion-input [(ngModel)]="fieldName" placeholder="Optional"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">💰 Rate / Hour (₹)</ion-label>
+      <ion-input type="number" [(ngModel)]="ratePerHour" (ionInput)="calculate()" (ionBlur)="saveRate()">
+      </ion-input>
+    </ion-item>
+  </ion-list>
+
+  <!-- Two flows: Native Share (image) & WhatsApp text -->
+  <ion-button expand="block" color="success" size="large" (click)="shareBill('native')">
+    📤 Share Bill (Image)
+  </ion-button>
+
+  <ion-button expand="block" color="tertiary" (click)="shareBill('whatsapp')">
+    💬 Send to Farmer (WhatsApp)
+  </ion-button>
+
+  <ion-button expand="block" color="medium" (click)="goToHistory()">
+    📚 View Bill History
+  </ion-button>
+
+  <ion-button expand="block" color="medium" (click)="goHome()">
+    ⬅️ Back to Home
+  </ion-button>
+</ion-content>

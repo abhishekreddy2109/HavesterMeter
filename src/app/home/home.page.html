@@ -1,20 +1,52 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
+<ion-header>
+  <ion-toolbar color="success">
+    <ion-title>Harvester Meter</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-padding">
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+  <div class="timer-box">
+    <h2>Current Session</h2>
+    <h1 class="current">{{ displayTimer }}</h1>
   </div>
+
+  <div class="timer-box total">
+    <h3>Total Active Time</h3>
+    <h2>{{ totalDisplay }}</h2>
+  </div>
+
+  <div class="button-group">
+    <ion-button color="success" size="large" expand="block"
+      (click)="startWork()"
+      *ngIf="!timer.running && timer.sessions.length===0">
+      🟢 Start Work
+    </ion-button>
+
+    <ion-button color="warning" size="large" expand="block"
+      (click)="pauseWork()"
+      *ngIf="timer.running">
+      🟡 Pause Work
+    </ion-button>
+
+    <ion-button color="primary" size="large" expand="block"
+      (click)="resumeWork()"
+      *ngIf="!timer.running && timer.sessions.length>0">
+      ▶️ Resume Work
+    </ion-button>
+
+    <ion-button color="danger" size="large" expand="block"
+      (click)="finishWork()"
+      *ngIf="timer.sessions.length>0">
+      🔴 Finish & Bill
+    </ion-button>
+  </div>
+
+
+   <ion-button color="tertiary" size="large" expand="block" (click)="goToHistory()">
+    📚 View Bill History
+  </ion-button>
+
+    
+
 </ion-content>
